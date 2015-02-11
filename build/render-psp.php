@@ -1,15 +1,14 @@
 <?php
 /*
-Plugin Name: Render Project Panorama
-Description: Integrates Render with Project Panorama.
-Version: 1.0.0
-Author: Joel Worsham
-Author URI: http://renderwp.com
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: Render_PSP
-Domain Path: /languages/
-*/
+ * Plugin Name: Render Project Panorama
+ * Description: Integrates Render with Project Panorama.
+ * Version: 1.0.0
+ * Author: Joel Worsham
+ * Author URI: http://realbigmarketing.com
+ * Plugin URI: http://realbigplugins.com/plugins/render-project-panorama/
+ * Text Domain: Render_PSP
+ * Domain Path: /languages/
+ */
 
 // Exit if loaded directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -74,15 +73,16 @@ class Render_PSP {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, '_init' ) );
 	}
 
 	/**
 	 * Initializes the plugin.
 	 *
 	 * @since 1.0.0
+	 * @access private
 	 */
-	public function init() {
+	public function _init() {
 
 		// Requires Render
 		if ( ! defined( 'RENDER_ACTIVE' ) ) {
@@ -105,16 +105,13 @@ class Render_PSP {
 
 		// Bail if issues
 		if ( ! empty( $this->deactivate_reasons ) ) {
-			add_action( 'admin_notices', array( $this, 'notice' ) );
+			add_action( 'admin_notices', array( $this, '_notice' ) );
 
 			return;
 		}
 
-		// Require files
-		$this->require_files();
-
 		// Add the shortcodes to Render
-		$this->add_shortcodes();
+		$this->_add_shortcodes();
 
 		// Translation ready
 		load_plugin_textdomain( self::$text_domain, false, RENDER_PSP_PATH . '/languages' );
@@ -124,27 +121,19 @@ class Render_PSP {
 
 		// Licensing
 		render_setup_license( 'render_psp', 'Project Panorama', RENDER_VERSION, plugin_dir_path( __FILE__ ) );
-	}
 
-	/**
-	 * Requires files needed for the plugin to function.
-	 *
-	 * @since 1.0.0
-	 */
-	private function require_files() {
-
-		// Helper functions
-		require_once __DIR__ . '/core/functions.php';
+		// Disable TinyMCE buttons
+		render_disable_tinymce_button( 'currentprojects', 'Project List' );
+		render_disable_tinymce_button( 'singleproject', 'Embed a Project' );
 	}
 
 	/**
 	 * Add data and inputs for all Project Panorama shortcodes and pass them through Render's function.
 	 *
 	 * @since 1.0.0
+	 * @access private
 	 */
-	private function add_shortcodes() {
-
-		global $post;
+	private function _add_shortcodes() {
 
 		foreach (
 			array(
@@ -202,7 +191,15 @@ class Render_PSP {
 					'title'       => __( 'Project Status', self::$text_domain ),
 					'description' => __( 'Embed an entire project into your page or post.', self::$text_domain ),
 					'atts'        => array(
-						'id'         => render_sc_attr_template( 'post_list' ),
+						'id'         => render_sc_attr_template( 'post_list', array(
+							'label'      => __( 'Project', self::$text_domain ),
+							'required'   => true,
+							'properties' => array(
+								'placeholder' => __( 'Select a project', self::$text_domain ),
+							),
+						), array(
+							'post_type' => 'psp_projects',
+						) ),
 						'progress'   => array(
 							'label'      => __( 'Progress Bar', self::$text_domain ),
 							'type'       => 'toggle',
@@ -241,7 +238,7 @@ class Render_PSP {
 						),
 						'tasks'      => array(
 							'label'       => __( 'Tasks', self::$text_domain ),
-							'description' => __( 'Phases must be set to "yes"', self::$text_domain ),
+							'description' => __( 'Phases must be set to "Show"', self::$text_domain ),
 							'type'        => 'selectbox',
 							'properties'  => array(
 								'options' => array(
@@ -285,7 +282,7 @@ class Render_PSP {
 						) ),
 						'display' => array(
 							'label'       => __( 'Display', self::$text_domain ),
-							'description' => __( 'What portion of the project you’d like to display', self::$text_domain ),
+							'description' => __( 'What portion of the project you would like to display', self::$text_domain ),
 							'required'    => true,
 							'type'        => 'selectbox',
 							'properties'  => array(
@@ -361,11 +358,12 @@ class Render_PSP {
 	}
 
 	/**
-	 * Display a notice in the admin if Project Panorama and Render are not both active.
+	 * Display a notice in the admin if something went wrong.
 	 *
 	 * @since 1.0.0
+	 * @access private
 	 */
-	public function notice() {
+	public function _notice() {
 		?>
 		<div class="error">
 			<p>
@@ -384,4 +382,4 @@ class Render_PSP {
 	}
 }
 
-$Render_PSP = new Render_PSP();
+new Render_PSP();
