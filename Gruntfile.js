@@ -211,16 +211,14 @@ module.exports = function (grunt) {
         },
 
         pot: {
-            build: {
-                options: {
-                    text_domain: text_domain,
-                    dest: 'build/languages/',
-                    keywords: ['gettext', '__', '_e']
-                },
-                files: {
-                    src: ['build/**'],
-                    expand: true
-                }
+            options: {
+                text_domain: text_domain,
+                dest: 'build/languages/',
+                keywords: ['gettext', '__', '_e']
+            },
+            files: {
+                src: ['build/**'],
+                expand: true
             }
         },
 

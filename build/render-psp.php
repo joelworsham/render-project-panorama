@@ -79,7 +79,7 @@ class Render_PSP {
 	/**
 	 * Initializes the plugin.
 	 *
-	 * @since 1.0.0
+	 * @since  1.0.0
 	 * @access private
 	 */
 	public function _init() {
@@ -130,13 +130,23 @@ class Render_PSP {
 	/**
 	 * Add data and inputs for all Project Panorama shortcodes and pass them through Render's function.
 	 *
-	 * @since 1.0.0
+	 * @since  1.0.0
 	 * @access private
 	 */
 	private function _add_shortcodes() {
 
 		foreach (
 			array(
+				/*
+				 * Project List
+				 *
+				 * Outputs a list of all projects.
+				 *
+				 * @since 1.0.0
+				 *
+				 * @att {selectbox} status Filter which projects to show based on status.
+				 * @att {counter}   count  The number of projects to show (-1 for all).
+				 */
 				array(
 					'code'        => 'project_list',
 					'function'    => 'psp_current_projects',
@@ -185,6 +195,20 @@ class Render_PSP {
 						'displayBlock' => true,
 					),
 				),
+				/*
+				 * Project Status
+				 *
+				 * Embed an entire project onto the page.
+				 *
+				 * @since 1.0.0
+				 *
+				 * @att {selectbox} id         Which project to embed.
+				 * @att {toggle}    progress   Show or hide the project progress bar.
+				 * @att {toggle}    overview   Show or hide the project overview.
+				 * @att {toggle}    phases     Show or hide the project phases.
+				 * @att {selectbox} tasks      Which tasks to show (phases must be set to show).
+				 * @att {selectbox} milestones Which milestones to show.
+				 */
 				array(
 					'code'        => 'project_status',
 					'function'    => 'psp_single_project',
@@ -265,6 +289,17 @@ class Render_PSP {
 						'displayBlock' => true,
 					),
 				),
+				/*
+				 * Project Status Part
+				 *
+				 * Embed a portion of a project onto a page.
+				 *
+				 * @since 1.0.0
+				 *
+				 * @att {selectbox} id      Which project to embed a part of.
+				 * @att {selectbox} display Which portion of the project to embed.
+				 * @att {selectbox} style   Optional and dependent on which Display is set.
+				 */
 				array(
 					'code'        => 'project_status_part',
 					'function'    => 'psp_project_part',
@@ -332,12 +367,12 @@ class Render_PSP {
 						'displayBlock' => true,
 					),
 				),
-				// Publicly private shortcode
+				// Publicly hidden shortcode
 				array(
 					'code'      => 'panorama_dashboard',
 					'noDisplay' => true,
 				),
-				// Publicly private shortcode
+				// Publicly hidden shortcode
 				array(
 					'code'      => 'acf',
 					'noDisplay' => true,
@@ -360,7 +395,7 @@ class Render_PSP {
 	/**
 	 * Display a notice in the admin if something went wrong.
 	 *
-	 * @since 1.0.0
+	 * @since  1.0.0
 	 * @access private
 	 */
 	public function _notice() {
