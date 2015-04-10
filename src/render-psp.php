@@ -111,7 +111,12 @@ class Render_PSP {
 		add_action( 'wp_enqueue_scripts', array( $this, 'dynamic_styles' ) );
 
 		// Licensing
-		render_setup_license( 'render_psp', 'Project Panorama', RENDER_VERSION, plugin_dir_path( __FILE__ ) );
+		render_setup_license(
+			'render_psp',
+			'Project Panorama',
+			RENDER_VERSION,
+			defined( 'RENDER_DEVELOPMENT' ) ? 'render-project-panorama-development/init.php' : __FILE__
+		);
 
 		// Disable TinyMCE buttons
 		render_disable_tinymce_button( 'currentprojects', 'Project List' );
